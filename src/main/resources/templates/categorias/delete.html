@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="layouts/_mainLayout">
+
+<head>
+    <title>Eliminar</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!-- Mostrar mensaje de confirmación en caso de éxito -->
+        <div th:if="${msg != null}">
+            <script>
+                Swal.fire({
+                    title: "Confirmación",
+                    text: '[[${msg}]]',
+                    icon: "success"
+                });
+            </script>
+        </div>
+
+        <!-- Mostrar mensaje de error en caso de error -->
+        <div th:if="${error != null}">
+            <script>
+                Swal.fire({
+                    title: "Error",
+                    text: '[[${error}]]',
+                    icon: "error"
+                });
+            </script>
+        </div>
+
+        <div class="row" style="margin: 30px;">
+            <div class="card">
+                <div class="card-header row">
+                    <h1 class="card-text col-md-12" style="text-align: center;">Eliminar Categoria</h1>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/categorias/delete}" th:object="${categoriaA}" class="row" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="col-md-12">
+                            <label class="form-label" for="nombreA">Nombre<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" th:field="*{nombreA}" id="nombreA"
+                                placeholder="Nombre de la Categoria" required disabled>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label" for="descripcionA">Descripcion<span style="color: red;">*</span></label>
+                            <textarea type="text" class="form-control" th:field="*{descripcionA}" id="descripcionA"
+                                placeholder="Descripcion de la Categoria" required disabled></textarea>
+                        </div>
+                        <div class="row" style="display: flex; flex-wrap: 3px;">
+                            <div class="col-md-6" style="padding-top: 10px;">
+                                <button style="width: 100%;" type="submit" class="btn btn-danger">Eliminar</button>
+                            </div>
+                            <div class="col-md-6" style="padding-top: 10px;">
+                                <a style="width: 100%;" class="btn btn-secondary"
+                                    th:href="@{/categorias/index}">Regresar</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

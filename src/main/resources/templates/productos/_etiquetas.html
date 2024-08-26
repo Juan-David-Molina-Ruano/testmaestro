@@ -1,0 +1,35 @@
+<div class="overflow-auto">
+    <table class="table table-striped col-md-12 ">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th th:if="${action == 'create' || action == 'edit'}">
+                    <button type="submit" class="btn btn-success" th:formaction="@{/productos/addetiquetas}">+</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item , index: ${productoA.etiquetas}">
+                <td style="display: none;">
+                    <input type="hidden" class="form-control" th:value="${item.id}"
+                        th:name="'etiquetas[' + ${index.index} + '].id'" id="id">
+                </td>
+                <td>
+                    <input type="text" class="form-control" th:value="${item.nombreA}" data-block
+                        th:name="'etiquetas[' + ${index.index} + '].nombreA'" id="nombreA" required>
+                </td>
+                <td th:if="${action == 'create' || action == 'edit'}">
+                    <button type="submit" class="btn btn-danger"
+                        th:formaction="@{/productos/deletiquetas/{id} (id = ${item.id})}">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script th:if="${action == 'delete' || action == 'details'}">
+    const blockInputs = document.querySelectorAll("*[data-block]");
+    for (var i = 0; i < blockInputs.length; i++) {
+        const element=blockInputs[i];
+        element.setAttribute("disabled","disabled");
+    }
+</script>

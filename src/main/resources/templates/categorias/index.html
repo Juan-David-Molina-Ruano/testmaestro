@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="layouts/_mainLayout">
+
+<head>
+    <title>Lista de Categorias</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!-- Mostrar mensaje de confirmación en caso de éxito -->
+        <div th:if="${msg != null}">
+            <script>
+                Swal.fire({
+                    title: "Confirmación",
+                    text: '[[${msg}]]',
+                    icon: "success"
+                });
+            </script>
+        </div>
+
+        <!-- Mostrar mensaje de error en caso de error -->
+        <div th:if="${error != null}">
+            <script>
+                Swal.fire({
+                    title: "Error",
+                    text: '[[${error}]]',
+                    icon: "error"
+                });
+            </script>
+        </div>
+
+        <div class="row" style="margin-top: 10px; margin-left: 40px; margin-right: 40px;">
+            <div class="card">
+                <div class="card-header row">
+                    <h1 class="card-text col-md-12" style="text-align: center;">Lista de Categorias</h1>
+                    <a th:href="@{/categorias/create}" class="btn btn-success col-md-12">Nueva Categoria</a>
+                </div>
+
+                <div class="card-body">
+                    <div class="overflow-auto">
+                        <table class="table table-striped col-md-12 ">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Descripcion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${categorias}">
+                                    <td th:text="${item.nombreA}"></td>
+                                    <td th:text="${item.descripcionA}"></td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <th>
+                                                    <a th:href="@{/categorias/details/{id} (id = ${item.id}) }"
+                                                        class="btn btn-secondary">Detalles</a>
+                                                </th>
+                                                <th>
+                                                    <a th:href="@{/categorias/edit/{id}(id = ${item.id}) }"
+                                                        class="btn btn-info">Editar</a>
+                                                </th>
+                                                <th>
+                                                    <a th:href="@{/categorias/remove/{id} (id = ${item.id}) }"
+                                                        class="btn btn-danger">Eliminar</a>
+                                                </th>
+                                            <tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Page navigation" class="col-md-12">
+                        <ul class="pagination">
+                            <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                                <a class="page-link"
+                                    th:href="@{/categorias/index(page=${pageNumber},size=${categorias.size})}"
+                                    th:text="${pageNumber}"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
