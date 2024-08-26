@@ -3,7 +3,7 @@
     layout:decorate="layouts/_mainLayout">
 
 <head>
-    <title>Crear</title>
+    <title>Detalles</title>
 </head>
 
 <body>
@@ -33,51 +33,53 @@
         <div class="row" style="margin: 30px;">
             <div class="card">
                 <div class="card-header row">
-                    <h1 class="card-text col-md-12" style="text-align: center;">Crear Producto</h1>
+                    <h1 class="card-text col-md-12" style="text-align: center;">Detalles de Producto</h1>
                 </div>
 
                 <div class="card-body">
-                    <form th:action="@{/productos/save}" th:object="${productoA}" class="row" method="post">
+                    <form th:object="${productoA}" class="row" method="post">
+
                         <div class="col-md-6">
                             <label class="form-label" for="nombreA">Nombre<span style="color: red;">*</span></label>
                             <input type="text" class="form-control" th:field="*{nombreA}" id="nombreA"
-                                placeholder="Nombre del Producto" required>
+                                placeholder="Nombre del Producto" required disabled>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="precioA">Precio<span style="color: red;">*</span></label>
                             <input type="number" class="form-control" th:field="*{precioA}" id="precioA"
-                                placeholder="Nombre del Precio" required>
+                                placeholder="Nombre del Precio" required disabled>
                         </div>
-                        
+
                         <div class="col-md-6">
-                            <label class="form-label" for="existenciaA">Existencia<span style="color: red;">*</span></label>
+                            <label class="form-label" for="existenciaA">Existencia<span
+                                    style="color: red;">*</span></label>
                             <input type="number" class="form-control" th:field="*{existenciaA}" id="existenciaA"
-                                placeholder="Existencia del Precio" required>
+                                placeholder="Existencia del Precio" required disabled>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label" for="categoriaA">Categoria<span style="color: red;">*</span></label>
-                            <select name="categoriaA_id" id="categoriaA" class="form-control" required>
-                                <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
-                                    th:text="${categoria.nombreA}"></option>
-                            </select>
+                            <label class="form-label" for="categoriaA">Categoría<span style="color: red;">*</span></label>
+                            <input type="text" class="form-control" th:value="${productoA.categoriaA.nombreA}" id="categoriaA"
+                                placeholder="Categoría del Producto" required disabled>
                         </div>
-                        
-                        <th:block style="margin-top: 10px;" th:insert="~{/productos/_etiquetas.html}" class="col-md-12" th:with="action=${'create'}"></th:block>
 
-                        <div class="row" style="display: flex; flex-wrap: 3px;">
-                            <div class="col-md-6" style="padding-top: 10px;">
-                                <button style="width: 100%;" type="submit" class="btn btn-primary">Guardar</button>
-                            </div>
-                            <div class="col-md-6" style="padding-top: 10px;">
-                                <a style="width: 100%;" class="btn btn-secondary" th:href="@{/productos/index}">Regresar</a>
-                            </div>
+                        <th:block style="margin-top: 10px;" th:insert="~{/productos/_etiquetas.html}" class="col-md-12"
+                            th:with="action=${'details'}"></th:block>
+
+                        <div class="col-md-6" style="padding-top: 10px;">
+                            <a style="width: 100%;" th:href="@{/productos/edit/{id} (id = ${productoA.id}) }"
+                                class="btn btn-primary">Editar</a>
                         </div>
-                    </form>
+                        <div class="col-md-6" style="padding-top: 10px;">
+                            <a style="width: 100%;" class="btn btn-secondary" th:href="@{/productos/index}">Regresar</a>
+                        </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+    </div>
+
 </body>
 
 </html>
