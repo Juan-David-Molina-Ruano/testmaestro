@@ -98,40 +98,36 @@ public class ProductoAController {
             attributes.addFlashAttribute("error", "No se pudo guardar debido a un error.");
             return "productos/create";
         }
-        // Recuperar la categoría usando el id proporcionado
-        CategoriaA categoriaA = categoriaAService.buscarPorId(categoriaA_id).orElse(null);
 
-        if (categoriaA != null) {
-            productoA.setCategoriaA(categoriaA);
-        } else {
+        CategoriaA categoriaA = categoriaAService.buscarPorId(categoriaA_id).orElse(null);
+        if (categoriaA == null) {
             attributes.addFlashAttribute("error", "La categoría seleccionada no es válida.");
-            return "productos/create";
+            return productoA.getId() != null ? "redirect:/productos/edit/" + productoA.getId()
+                    : "redirect:/productos/create";
         }
-        if (productoA.getEtiquetas() != null) {
-            for (EtiquetaA item : productoA.getEtiquetas()) {
-                if (item.getId() != null && item.getId() < 0)
-                    item.setId(null);
-                item.setProductoA(productoA);
-            }
-        }
+
         if (productoA.getId() != null && productoA.getId() > 0) {
-            // funcionalidad para cuando es modificar un registro
-            ProductoA productoAUpdate = productoAService.buscarPorId(productoA.getId()).get();
-            // almacenar en un dicionario los telefono que estan
-            // guardados en la base de datos para mejor acceso a ellos
+            // Modificar un registro existente
+            ProductoA productoAUpdate = productoAService.buscarPorId(productoA.getId()).orElse(null);
+            if (productoAUpdate == null) {
+                attributes.addFlashAttribute("error", "No se encontró el producto a actualizar.");
+                return "redirect:/productos/index";
+            }
+
+            // Actualizar campos
+            productoAUpdate.setNombreA(productoA.getNombreA());
+            productoAUpdate.setPrecioA(productoA.getPrecioA());
+            productoAUpdate.setExistenciaA(productoA.getExistenciaA());
+            productoAUpdate.setCategoriaA(categoriaA);
+
+            // Actualizar etiquetas
             Map<Integer, EtiquetaA> etiquetasData = new HashMap<>();
             if (productoAUpdate.getEtiquetas() != null) {
                 for (EtiquetaA item : productoAUpdate.getEtiquetas()) {
                     etiquetasData.put(item.getId(), item);
                 }
             }
-            // actualizar los registro que viene de la vista hacia el que se encuentra por
-            // id
-            productoAUpdate.setNombreA(productoA.getNombreA());
-            productoAUpdate.setPrecioA(productoA.getPrecioA());
-            productoAUpdate.setExistenciaA(productoA.getExistenciaA());
-            // recorrer los telefonos obtenidos desde la vista y actualizar
-            // ProductoAiUpdate para que implemente los cambios
+
             if (productoA.getEtiquetas() != null) {
                 for (EtiquetaA item : productoA.getEtiquetas()) {
                     if (item.getId() == null) {
@@ -141,27 +137,31 @@ public class ProductoAController {
                         productoAUpdate.getEtiquetas().add(item);
                     } else {
                         if (etiquetasData.containsKey(item.getId())) {
-                            EtiquetaA telefonoUpdate = etiquetasData.get(item.getId());
-                            // actualizar las propiedades de EtiquetaA
-                            // si ya existe en la base de datos
-                            telefonoUpdate.setNombreA(item.getNombreA());
-                            // remover del dicionario los telefonos datas para
-                            // saber que cuales se van eliminar que serian
-                            // todos aquellos que no se lograron remove porque no viene desde
-                            // la vista
+                            EtiquetaA etiquetaUpdate = etiquetasData.get(item.getId());
+                            etiquetaUpdate.setNombreA(item.getNombreA());
                             etiquetasData.remove(item.getId());
                         }
                     }
                 }
             }
-            if (etiquetasData.isEmpty() == false) {
-                for (Map.Entry<Integer, EtiquetaA> item : etiquetasData.entrySet()) {
-                    productoAUpdate.getEtiquetas().removeIf(elemento -> elemento.getId() == item.getKey());
-                }
 
+            if (!etiquetasData.isEmpty()) {
+                productoAUpdate.getEtiquetas().removeIf(elemento -> etiquetasData.containsKey(elemento.getId()));
             }
+
             productoA = productoAUpdate;
+        } else {
+            // Crear un nuevo registro
+            productoA.setCategoriaA(categoriaA);
+            if (productoA.getEtiquetas() != null) {
+                for (EtiquetaA item : productoA.getEtiquetas()) {
+                    if (item.getId() != null && item.getId() < 0)
+                        item.setId(null);
+                    item.setProductoA(productoA);
+                }
+            }
         }
+
         // Guardar el producto
         productoAService.crearOEditar(productoA);
         attributes.addFlashAttribute("msg", "Producto guardado correctamente");
@@ -184,6 +184,14 @@ public class ProductoAController {
         }
 
         return "/productos/details";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Integer id, Model model) {
+        ProductoA productoA = productoAService.buscarPorId(id).get();
+        model.addAttribute("categorias", categoriaAService.obtenerTodos());
+        model.addAttribute("productoA", productoA);
+        return "/productos/edit";
     }
 
 }
