@@ -106,6 +106,15 @@ public class ProductoAController {
                     : "redirect:/productos/create";
         }
 
+        productoA.setCategoriaA(categoriaA);
+        if (productoA.getEtiquetas() != null) {
+            for (EtiquetaA item : productoA.getEtiquetas()) {
+                if (item.getId() != null && item.getId() < 0)
+                    item.setId(null);
+                item.setProductoA(productoA);
+            }
+        }
+
         if (productoA.getId() != null && productoA.getId() > 0) {
             // Modificar un registro existente
             ProductoA productoAUpdate = productoAService.buscarPorId(productoA.getId()).orElse(null);
@@ -150,17 +159,7 @@ public class ProductoAController {
             }
 
             productoA = productoAUpdate;
-        } else {
-            // Crear un nuevo registro
-            productoA.setCategoriaA(categoriaA);
-            if (productoA.getEtiquetas() != null) {
-                for (EtiquetaA item : productoA.getEtiquetas()) {
-                    if (item.getId() != null && item.getId() < 0)
-                        item.setId(null);
-                    item.setProductoA(productoA);
-                }
-            }
-        }
+        } 
 
         // Guardar el producto
         productoAService.crearOEditar(productoA);

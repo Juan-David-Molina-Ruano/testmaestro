@@ -49,29 +49,35 @@
                             <input type="number" class="form-control" th:field="*{precioA}" id="precioA"
                                 placeholder="Nombre del Precio" required>
                         </div>
-                        
+
                         <div class="col-md-6">
-                            <label class="form-label" for="existenciaA">Existencia<span style="color: red;">*</span></label>
+                            <label class="form-label" for="existenciaA">Existencia<span
+                                    style="color: red;">*</span></label>
                             <input type="number" class="form-control" th:field="*{existenciaA}" id="existenciaA"
                                 placeholder="Existencia del Precio" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label" for="categoriaA">Categoria<span style="color: red;">*</span></label>
-                            <select name="categoriaA_id" id="categoriaA" class="form-control" required>
-                                <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
-                                    th:text="${categoria.nombreA}"></option>
-                            </select>
+                            <label class="form-label" for="categoriaA">Categoría<span
+                                    style="color: red;">*</span></label>
+                                    <select name="categoriaA_id" id="categoriaA" class="form-control" required>
+                                        <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
+                                            th:text="${categoria.nombreA}"
+                                            th:selected="${productoA.categoriaA != null and categoria.id == productoA.categoriaA.id}">
+                                        </option>
+                                    </select>                                    
                         </div>
-                        
-                        <th:block style="margin: 20px;" th:insert="~{/productos/_etiquetas.html}" class="col-md-12" th:with="action=${'create'}"></th:block>
+
+                        <th:block style="margin: 20px;" th:insert="~{/productos/_etiquetas.html}" class="col-md-12"
+                            th:with="action=${'create'}"></th:block>
 
                         <div class="row" style="display: flex; flex-wrap: 3px;">
                             <div class="col-md-6" style="padding-top: 10px;">
                                 <button style="width: 100%;" type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                             <div class="col-md-6" style="padding-top: 10px;">
-                                <a style="width: 100%;" class="btn btn-secondary" th:href="@{/productos/index}">Regresar</a>
+                                <a style="width: 100%;" class="btn btn-secondary"
+                                    th:href="@{/productos/index}">Regresar</a>
                             </div>
                         </div>
                     </form>

@@ -59,8 +59,10 @@
                             <label class="form-label" for="categoriaA">Categoria<span style="color: red;">*</span></label>
                             <select name="categoriaA_id" id="categoriaA" class="form-control" required>
                                 <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
-                                    th:text="${categoria.nombreA}"></option>
-                            </select>
+                                    th:text="${categoria.nombreA}"
+                                    th:selected="${productoA.categoriaA != null and categoria.id == productoA.categoriaA.id}">
+                                </option>
+                            </select>   
                         </div>
                         
                         <th:block style="margin-top: 10px;" th:insert="~{/productos/_etiquetas.html}" class="col-md-12" th:with="action=${'create'}"></th:block>

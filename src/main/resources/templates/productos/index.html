@@ -45,6 +45,8 @@
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Existencia</th>
+                                    <th>Categoria</th>
+                                    <th>Etiquetas</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,6 +54,12 @@
                                     <td th:text="${item.nombreA}"></td>
                                     <td th:text="${item.precioA}"></td>
                                     <td th:text="${item.existenciaA}"></td>
+                                    <td th:text="${item.categoriaA.nombreA}"></td>
+                                    <td>
+                                        <ul>
+                                            <li th:each="etiqueta : ${item.etiquetas}" th:text="${etiqueta.nombreA}"></li>
+                                        </ul>
+                                    </td>
                                     <td>
                                         <table>
                                             <tr>
